@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchCategories, fetchSchemes, fetchStats } from "./api/schemes";
 import { FilterBar } from "./components/FilterBar";
+import { LiveUpdatesPanel } from "./components/LiveUpdatesPanel";
 import { SchemeDetailPanel } from "./components/SchemeDetailPanel";
 import { SchemeGrid } from "./components/SchemeGrid";
 import { SummaryCards } from "./components/SummaryCards";
@@ -88,6 +89,8 @@ function App() {
           <SchemeDetailPanel scheme={selected} onClose={() => setSelected(null)} />
         </div>
       )}
+
+      <LiveUpdatesPanel />
     </div>
   );
 }

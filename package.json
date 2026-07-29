@@ -1,12 +1,9 @@
 {
-  "name": "schemes-generator-server",
-  "version": "0.1.0",
+  "name": "scheme-grid",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "build": "npm --prefix client install && npm --prefix client run build"
   },
   "dependencies": {
     "cheerio": "^1.2.0",
@@ -17,7 +14,6 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^22.10.2",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
 }
