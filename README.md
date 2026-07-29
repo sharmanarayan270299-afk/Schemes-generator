@@ -64,6 +64,25 @@ lightweight fetch+cheerio pipeline used here. Those categories still surface
 opportunistically through PIB/RBI keyword matching when relevant news breaks,
 but don't have a dedicated source yet.
 
+Alternatives investigated and rejected for these 4 categories (see the
+"Coverage Status" tab in the companion Google Sheet for full detail):
+- **Headless browser (Playwright/Puppeteer):** can't be built or verified
+  in this dev environment — its browser subprocess is blocked from reaching
+  external hosts. Shipping unverified browser-automation code to production
+  (e.g. via `@sparticuz/chromium-min` on Vercel) was judged too risky without
+  a way to test it first.
+- **Invest India:** blocks Node's `fetch` specifically (403), likely via TLS
+  fingerprinting — would fail in production too, not just locally.
+- **Make in India:** its "Latest Updates" section is stale (most recent item
+  over a year old) — would misrepresent as live.
+- **Jina AI Reader (`r.jina.ai`):** works once anonymously then requires
+  auth after an IP block; even when working it returned no data for DPIIT's
+  client-rendered content (didn't wait for the async fetch to resolve).
+
+A paid rendering-as-a-service API (e.g. ScrapingBee, Browserless) with a
+provided API key is the most viable next step for these 4 categories, since
+it sidesteps the "can't run/verify a browser" constraint entirely.
+
 ## Deploying to Vercel
 
 The repo is set up to deploy as a single Vercel project:
