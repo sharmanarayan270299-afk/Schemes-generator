@@ -42,12 +42,27 @@ fetches, normalizes, and categorizes updates from real government sites:
 
 - **PIB** (`pib.gov.in`) — official RSS feed of press releases, categorized
   by keyword matching against the 8 scheme categories
-- **GST Council** (`gstcouncil.gov.in`) — "What's New" section scraped with
-  `cheerio`
-- **CHAMPIONS Portal** (`champions.gov.in`) — MSME "what's new" ticker
+- **GST Council** (`gstcouncil.gov.in`) — "What's New" section → GST
+- **CHAMPIONS Portal** (`champions.gov.in`) — MSME "what's new" ticker → MSME Schemes
 - **Reserve Bank of India** (`rbi.org.in`) — press release listing, keyword-
   matched (mostly regulatory/monetary items, occasionally investment-scheme
   announcements like Sovereign Gold Bond tranches)
+- **Ministry of Heavy Industries** (`heavyindustries.gov.in`) — "what's new"
+  ticker (auto PLI) → Production Incentives
+- **Ministry of Steel** (`steel.gov.in`) — "what's new" listing (specialty
+  steel PLI) → Production Incentives
+- **MNRE** (`mnre.gov.in`) — news ticker (solar/green-hydrogen schemes) →
+  Gov. Subsidies
+- **CBIC legacy portal** (`cbic-gst.gov.in`) — Central Excise/Service Tax
+  flash-news marquee → Customs Schemes
+- **Department of Revenue** (`dor.gov.in`) — "what's new" marquee → Taxation
+
+All 8 scheme categories now have live coverage: GST, MSME Schemes, and
+Production Incentives have dedicated, high-volume sources; Gov. Subsidies
+and Customs Schemes have dedicated sources; Taxation and Central & State
+Gov. Schemes are thinner (2-3 items/run) but real, dated content; General
+cross-ministry items (PIB, RBI) fall back to whichever category their
+keywords match, or "General" otherwise.
 
 This validates the approach described in the sourcing master sheet (one
 source-adapter per government portal, daily/weekly check frequency, results
@@ -55,33 +70,14 @@ merged into a single feed). To add another source: create a new file in
 `server/src/scrapers/` implementing `SourceDefinition` from
 `server/src/scrapers/types.ts`, then add it to `server/src/scrapers/registry.ts`.
 
-**Known limitation:** the canonical portals for Gov. Subsidies, Taxation,
-Production Incentives, and Customs Schemes (DPIIT, MeitY, CBIC, DGFT, Income
-Tax Dept, myScheme) are all modern JS single-page apps — they return an
-empty shell to a plain HTTP fetch and would need headless-browser rendering
-(e.g. Playwright) to scrape, which is a heavier/slower approach than the
-lightweight fetch+cheerio pipeline used here. Those categories still surface
-opportunistically through PIB/RBI keyword matching when relevant news breaks,
-but don't have a dedicated source yet.
-
-Alternatives investigated and rejected for these 4 categories (see the
-"Coverage Status" tab in the companion Google Sheet for full detail):
-- **Headless browser (Playwright/Puppeteer):** can't be built or verified
-  in this dev environment — its browser subprocess is blocked from reaching
-  external hosts. Shipping unverified browser-automation code to production
-  (e.g. via `@sparticuz/chromium-min` on Vercel) was judged too risky without
-  a way to test it first.
-- **Invest India:** blocks Node's `fetch` specifically (403), likely via TLS
-  fingerprinting — would fail in production too, not just locally.
-- **Make in India:** its "Latest Updates" section is stale (most recent item
-  over a year old) — would misrepresent as live.
-- **Jina AI Reader (`r.jina.ai`):** works once anonymously then requires
-  auth after an IP block; even when working it returned no data for DPIIT's
-  client-rendered content (didn't wait for the async fetch to resolve).
-
-A paid rendering-as-a-service API (e.g. ScrapingBee, Browserless) with a
-provided API key is the most viable next step for these 4 categories, since
-it sidesteps the "can't run/verify a browser" constraint entirely.
+**Still not covered:** the canonical *aggregator* portals for these
+categories (DPIIT, MeitY, CBIC's main site, DGFT, Income Tax Dept, myScheme)
+are all modern JS single-page apps — they return an empty shell to a plain
+HTTP fetch. The ministry/department sites added above are real substitutes,
+not full replacements. A rendering-as-a-service API (ScrapingBee is planned)
+would let these be scraped too; see the "Coverage Status" tab in the
+companion Google Sheet for the full investigation (headless browser blocked
+in this dev sandbox, Invest India/Make in India/Jina Reader rejected).
 
 ## Deploying to Vercel
 
