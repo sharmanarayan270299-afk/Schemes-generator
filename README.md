@@ -44,12 +44,25 @@ fetches, normalizes, and categorizes updates from real government sites:
   by keyword matching against the 8 scheme categories
 - **GST Council** (`gstcouncil.gov.in`) — "What's New" section scraped with
   `cheerio`
+- **CHAMPIONS Portal** (`champions.gov.in`) — MSME "what's new" ticker
+- **Reserve Bank of India** (`rbi.org.in`) — press release listing, keyword-
+  matched (mostly regulatory/monetary items, occasionally investment-scheme
+  announcements like Sovereign Gold Bond tranches)
 
 This validates the approach described in the sourcing master sheet (one
 source-adapter per government portal, daily/weekly check frequency, results
 merged into a single feed). To add another source: create a new file in
 `server/src/scrapers/` implementing `SourceDefinition` from
 `server/src/scrapers/types.ts`, then add it to `server/src/scrapers/registry.ts`.
+
+**Known limitation:** the canonical portals for Gov. Subsidies, Taxation,
+Production Incentives, and Customs Schemes (DPIIT, MeitY, CBIC, DGFT, Income
+Tax Dept, myScheme) are all modern JS single-page apps — they return an
+empty shell to a plain HTTP fetch and would need headless-browser rendering
+(e.g. Playwright) to scrape, which is a heavier/slower approach than the
+lightweight fetch+cheerio pipeline used here. Those categories still surface
+opportunistically through PIB/RBI keyword matching when relevant news breaks,
+but don't have a dedicated source yet.
 
 ## Deploying to Vercel
 
