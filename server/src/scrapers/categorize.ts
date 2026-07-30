@@ -7,7 +7,10 @@ const KEYWORD_RULES: [SchemeCategory, RegExp][] = [
     "Customs Schemes",
     /\bcustoms?\b|\bcbic\b|\bdgft\b|export promotion|duty drawback|epcg|rodtep|moowr|foreign trade policy|advance authorisation/i,
   ],
-  ["Production Incentives", /\bpli\b|production[- ]linked incentive/i],
+  [
+    "Production Incentives",
+    /\bpli\b|production[- ]linked incentive|bhavya\b|\bunnati\b|industrial corridor/i,
+  ],
   [
     "Gov. Investment Schemes",
     /sovereign gold bond|\bnps\b|\bppf\b|investment scheme|atal pension|sukanya samriddhi|kisan vikas patra|senior citizens savings|fund of funds|invest india|fdi\b|foreign investment/i,

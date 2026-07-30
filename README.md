@@ -56,13 +56,50 @@ fetches, normalizes, and categorizes updates from real government sites:
 - **CBIC legacy portal** (`cbic-gst.gov.in`) — Central Excise/Service Tax
   flash-news marquee → Customs Schemes
 - **Department of Revenue** (`dor.gov.in`) — "what's new" marquee → Taxation
+- **SIDBI** (`sidbi.in`) — news slider → Gov. Investment Schemes
+- **RIICO** (`riico.co.in`) — Rajasthan state industrial/land scheme updates
+  → Central & State Gov. Schemes
+- **UPEIDA** (`upeida.up.gov.in`) — UP expressway industrial land tenders/
+  notices → Central & State Gov. Schemes
+- **NICDC** (`nicdc.in`) — industrial corridor/BHAVYA scheme marquee →
+  Production Incentives
+- **MIDC** (`midcindia.org`) — Maharashtra industrial plot/land notices
+  (Marathi) → Central & State Gov. Schemes
 
-All 8 scheme categories now have live coverage: GST, MSME Schemes, and
-Production Incentives have dedicated, high-volume sources; Gov. Subsidies
-and Customs Schemes have dedicated sources; Taxation and Central & State
-Gov. Schemes are thinner (2-3 items/run) but real, dated content; General
+All 8 scheme categories now have live coverage across 14 sources (202
+items/run, zero scraper errors as of the last check): GST, MSME Schemes,
+Production Incentives, Gov. Subsidies, Customs Schemes, and Central & State
+Gov. Schemes all have multiple dedicated sources; Taxation and Gov.
+Investment Schemes are thinner but real, dated content. General
 cross-ministry items (PIB, RBI) fall back to whichever category their
 keywords match, or "General" otherwise.
+
+### 22-source request (2026-07-29)
+
+Tested 22 additional sources against the same no-browser fetch+cheerio
+constraint. 5 were scrapable and are listed above (SIDBI, RIICO, UPEIDA,
+NICDC, MIDC). The other 17 were rejected — see the "Coverage Status" tab
+in the companion Google Sheet for the full per-URL breakdown, summarized
+here:
+
+- **JS single-page apps** (empty shell without JS execution): myscheme.gov.in
+  (API returns 401 without an undiscovered key), dpiit.gov.in/offerings,
+  msme.gov.in, meity.gov.in/schemes, dgft.gov.in (AJAX-loaded, "No data
+  found!" without JS)
+- **Blocks Node's `fetch` (403), likely bot detection**: investindia.gov.in,
+  indiantradeportal.in, jansamarth.in, incometaxindia.gov.in (both the root
+  site and the circulars sub-path)
+- **Unreachable** (connection timeout/refused from this environment):
+  ifciltd.com, icegate.gov.in, niveshmitra.up.nic.in (its `.gov.in` mirror
+  loads but has no scrapable news feed, just static award badges)
+- **No public content feed found**: india.gov.in (a link aggregator to other
+  properties like PIB, not its own content source), nsws.gov.in (Drupal-
+  based, but the homepage has no public listing — approvals/scheme data is
+  behind login), startupindia.gov.in (public "newsletters" page is stale;
+  the live notifications feed requires login), gidc.gujarat.gov.in
+  (homepage marquee is just a phone number, no notice/tender listing found)
+- **Placeholder page, not the real site**: kiadb.in (serves a "Website
+  Launch" holding page)
 
 This validates the approach described in the sourcing master sheet (one
 source-adapter per government portal, daily/weekly check frequency, results
